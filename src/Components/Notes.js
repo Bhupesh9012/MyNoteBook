@@ -1,28 +1,35 @@
-import React,{useContext,useRef} from 'react'
+import React, { useContext, useRef, useEffect, useState } from 'react';
 import noteContext from '../context/Notes/noteContext';
 import Noteitem from './Noteitem';
 import AddNote from './AddNote';
-import { useEffect,useState } from 'react';
-const Notes = () => {
-      const context = useContext(noteContext);
-      const{notes,getNotes,editNote}=context;
-      useEffect(() => {
-       getNotes()
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-      }, []) 
-       const ref = useRef(null)
+import { useNavigate } from 'react-router-dom';
+
+const Notes = (props) => {
+  const context = useContext(noteContext);
+  const navigate = useNavigate();
+  const { notes, getNotes, editNote } = context;
+
+  useEffect(() => {
+    if (!localStorage.getItem('token')) {
+      navigate("/login");
+    } else {
+      getNotes();
+    }
+    // eslint-disable-next-line
+  }, []);
+      const ref = useRef(null)
        const refclose = useRef(null)
        const [note, setNote] = useState({id:"",etitle:"",edescription:"",etag:""})
      
        const updateNote=(currentNote)=>{
       ref.current.click();
       setNote({id:currentNote._id, etitle:currentNote.title,edescription:currentNote.description,etag:currentNote.tag})
-
       }
       const handleClick=(e)=>{
         console.log("Updating the note...",note)
         editNote(note.id,note.etitle,note.edescription,note.etag);
         refclose.current.click();
+         props.showAlert("Updated successfully","success")
     }
     const onChange=(e)=>{
         setNote({...note,[e.target.name]:e.target.value})
@@ -30,7 +37,7 @@ const Notes = () => {
      
   return (
     <>
-    <AddNote/>
+    <AddNote showAlert={props.showAlert}/>
     <button ref={ref} type="button" className="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#exampleModal">
      Launch demo modal
     </button>
@@ -72,7 +79,7 @@ const Notes = () => {
       {notes.length===0 && 'No notes to display'}
       </div>
       {(Array.isArray(notes)?notes:[]).map((note)=>
-        (<Noteitem key={note._id}updateNote={updateNote} note={note}/>
+        (<Noteitem key={note._id}updateNote={updateNote} showAlert={props.showAlert} note={note}/>
       ))}
 </div>
 </>

@@ -14,8 +14,8 @@ const NoteState=(props)=>{
         method: 'GET',
         headers: {
           'content-Type': 'application/json',
-          "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjgyNmVhZmJiY2M0MTQwNzAwNmQzYWI5In0sImlhdCI6MTc0ODA5NTQ2N30.UwEcXK1CBQgPWBAY0VwU78imsT0lTk92n7Z0HF6Utnw"
-        }
+          "auth-token": localStorage.getItem('token')
+        },
       });
       if (!response.ok) {
         throw new Error('Unauthorized or other error');
@@ -34,7 +34,7 @@ const NoteState=(props)=>{
       method: 'POST',
       headers: {
         'content-Type': 'application/json',
-        "auth-token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjgyNmVhZmJiY2M0MTQwNzAwNmQzYWI5In0sImlhdCI6MTc0ODA5NTQ2N30.UwEcXK1CBQgPWBAY0VwU78imsT0lTk92n7Z0HF6Utnw"
+        "auth-token": localStorage.getItem('token')
       },
       body: JSON.stringify({ title, description, tag })
     });
@@ -50,10 +50,11 @@ const NoteState=(props)=>{
       method:'DELETE',
       headers:{
         'content-Type':'application/json',
-        "auth-token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjgyNmVhZmJiY2M0MTQwNzAwNmQzYWI5In0sImlhdCI6MTc0ODA5NTQ2N30.UwEcXK1CBQgPWBAY0VwU78imsT0lTk92n7Z0HF6Utnw"
+        "auth-token":localStorage.getItem('token')
       },
     });
     const json=await response.json();
+    console.log(json)
     const newNotes = notes.filter((note) => note._id !== id);
     setNotes(newNotes);
   }
@@ -65,11 +66,12 @@ const NoteState=(props)=>{
       method:'PUT',
       headers:{
         'content-Type':'application/json',
-        "auth-token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjgyNmVhZmJiY2M0MTQwNzAwNmQzYWI5In0sImlhdCI6MTc0ODA5NTQ2N30.UwEcXK1CBQgPWBAY0VwU78imsT0lTk92n7Z0HF6Utnw"
+        "auth-token":localStorage.getItem('token')
       },
       body:JSON.stringify({title,description,tag})
     });
     const json=await response.json();
+    console.log(json)
 
     let NewNotes = JSON.parse(JSON.stringify(notes))
     //logic to edit in client
